@@ -13,23 +13,20 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PrintIcon from "@mui/icons-material/Print";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { addItem, apiCall, deleteItem, editItem } from "./redux/action";
+import {
+  addItem,
+  apiCall,
+  deleteItem,
+  editItem,
+  gotoForm,
+} from "./redux/action";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 function Tables() {
   const dispatch = useDispatch();
-  const { data, isEdit, filterData } = useSelector((el) => el);
+  const { apidata, isEdit, filterData } = useSelector((el) => el);
 
-  console.log(data);
-  useEffect(() => {
-    fetch("https://api.spacexdata.com/v3/capsules")
-      .then((res) => res?.json())
-      .then((data) => {
-        const payload = { apidata: data };
-        dispatch(apiCall(payload));
-      });
+  console.log(apidata);
 
-    // apiCall(dispatch(apiData));
-  }, []);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(7);
 
@@ -56,7 +53,7 @@ function Tables() {
     const payload = {
       formStatus: true,
     };
-    dispatch(addItem(payload));
+    dispatch(gotoForm(payload));
   };
 
   return (
@@ -75,6 +72,7 @@ function Tables() {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow sx={{ background: "#CFD9FE", height: "70px" }}>
+              <TableCell align="center">capsule_serial</TableCell>
               <TableCell align="center">capsule_id</TableCell>
               <TableCell align="center">details</TableCell>
               <TableCell align="center">landings</TableCell>
@@ -85,7 +83,7 @@ function Tables() {
               <TableCell align="center">Action</TableCell>
             </TableRow>
           </TableHead>
-          {filterData
+          {apidata
 
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row) => (
@@ -96,6 +94,7 @@ function Tables() {
                   <TableCell align="center">{row.details}</TableCell>
                   <TableCell align="center">{row.landings}</TableCell>
                   <TableCell align="center">{row.original_launch}</TableCell>
+                  <TableCell align="center">{row.reuse_count}</TableCell>
                   <TableCell align="center">{row.status}</TableCell>
                   <TableCell align="center">{row.type}</TableCell>
                   <TableCell
@@ -124,7 +123,7 @@ function Tables() {
       <TablePagination
         rowsPerPageOptions={[7, 10, 20]}
         component="div"
-        count={data.length}
+        count={apidata.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

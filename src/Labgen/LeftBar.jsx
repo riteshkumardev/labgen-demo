@@ -13,21 +13,25 @@ function LeftBar() {
   };
   const [inputData, steInputData] = useState(init);
 
-  console.log(inputData);
-
   const handleFilter = () => {
-    if (inputData?.capsule_serial !== "") {
-      const filterdata = data.filter((el) =>
-        el.status
+    console.log(inputData, "input");
+
+    if (inputData?.capsule_serial) {
+      const filterdatas = data.filter((el) =>
+        el.capsule_serial
           .toLowerCase()
           .includes(inputData?.capsule_serial?.toLowerCase())
       );
+      dispatch(filterData(filterdatas));
+      console.log(filterdatas, "giudh");
+    } else if (inputData?.capsule_id) {
+      const filterdata = data.filter((el) => {
+        return el.capsule_id == inputData?.capsule_id;
+      });
       dispatch(filterData(filterdata));
-    } else if (inputData?.capsule_serial !== "") {
-      const filterdata = data.filter((el) =>
-        el.status.toLowerCase().includes(inputData?.capsule_id?.toLowerCase())
-      );
-      dispatch(filterData(filterdata));
+      console.log(filterdata, "giudh");
+      console.log(data, "data");
+      console.log(inputData, "gdfgdtrgfdfdgregv");
     }
   };
 
@@ -62,6 +66,7 @@ function LeftBar() {
         name="capsule_id"
         onChange={handelchange}
         label="Capsule Id "
+        value={inputData.capsule_id || ""}
       />
       <TextField
         sx={{
@@ -73,6 +78,7 @@ function LeftBar() {
         name="capsule_serial"
         onChange={handelchange}
         label="Capsule Serial"
+        value={inputData.capsule_serial || ""}
       />
       <Button
         variant="outlined"

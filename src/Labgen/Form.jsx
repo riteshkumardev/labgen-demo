@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormControl } from "@mui/material";
+import { addItem, gotoBack, update } from "./redux/action";
 function Form() {
   const numeric = /^0|[1-9]\d*$/;
   const Srinngs = /^0|[A-Za-z]\d*$/;
@@ -83,21 +84,26 @@ function Form() {
 
     formState: { errors },
   } = useForm({
-    // defaultValues: { inputValuess },
+    defaultValues: isEdit ? edit : inputValues,
     mode: "onChange",
-    reValidateMode: "onSubmit",
 
     resolver: yupResolver(Schema),
   });
+
   const onSubmit = (data) => {
-    console.log(data);
+    dispatch(addItem(data));
+    console.log(data, "data");
   };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setinputValues({ ...inputValues, [name]: value });
+
+  const handleUpdate = (updates) => {
+    dispatch(update(updates));
   };
+  const handleCancel = () => {
+    dispatch(gotoBack());
+  };
+
   return (
-    <FormControl onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Paper
         sx={{
           padding: "50px",
@@ -121,7 +127,7 @@ function Form() {
               name="capsule_serial"
               label="Capsule Serial"
               // onChange={handleChange}
-              defaultValue={inputValuess?.capsule_id}
+
               // value={inputValuess.capsule_serial}
               {...register("capsule_serial")}
             />
@@ -132,8 +138,7 @@ function Form() {
               placeholder="Please enter your Capsule Id "
               name="capsule_id"
               label="Capsule Id"
-              {...register("dob")}
-              defaultValue={inputValuess.capsule_id}
+              {...register("capsule_id")}
             />
             <p style={{ color: "red" }}>{errors?.capsule_id?.message} </p>
             <TextField
@@ -141,6 +146,7 @@ function Form() {
               placeholder="Status "
               name="status"
               label="Status"
+              {...register("status")}
             />
           </Box>
           <Box
@@ -155,7 +161,7 @@ function Form() {
               // onChange={handleChange}
               placeholder=" "
               name="original_launch"
-              {...register("dob")}
+              {...register("original_launch")}
               label="Original Launch"
             />
             <p style={{ color: "red" }}>{errors?.original_launch?.message} </p>
@@ -163,10 +169,9 @@ function Form() {
               // onChange={handleChange}
               placeholder="original_launch_unix "
               name="original_launch_unix"
-              {...register("dob")}
+              {...register("original_launch_unix")}
               type="number"
               label="Original Launch Unix"
-              defaultValue={inputValuess.original_launch_unix}
             />
             <p style={{ color: "red" }}>
               {errors?.original_launch_unix?.message}{" "}
@@ -175,7 +180,7 @@ function Form() {
               // onChange={handleChange}
               placeholder="landings "
               name="landings"
-              {...register("dob")}
+              {...register("landings")}
               type="number"
               label="Landings"
             />
@@ -194,7 +199,7 @@ function Form() {
               // onChange={handleChange}
               placeholder="Type "
               name="type"
-              {...register("dob")}
+              {...register("type")}
               label="Type"
             />
             <p style={{ color: "red" }}>{errors?.Type?.message} </p>
@@ -202,7 +207,7 @@ function Form() {
               // onChange={handleChange}
               placeholder="Details "
               name="details"
-              {...register("dob")}
+              {...register("details")}
               label="Details"
             />
             <p style={{ color: "red" }}>{errors?.details?.message} </p>
@@ -210,7 +215,7 @@ function Form() {
               // onChange={handleChange}
               placeholder="Reuse Count "
               name="reuse_count"
-              {...register("dob")}
+              {...register("reuse_count")}
               type="number"
               label="Reuse Count"
             />
@@ -221,11 +226,16 @@ function Form() {
           <Button
             variant="outlined"
             sx={{ marginLeft: "80%", marginRight: "25px", marginTop: "50px" }}
+            onClick={handleCancel}
           >
             CANCEL
           </Button>
           {isEdit ? (
-            <Button variant="contained" sx={{ marginTop: "50px" }}>
+            <Button
+              variant="contained"
+              sx={{ marginTop: "50px" }}
+              onClick={handleUpdate}
+            >
               UPDATE
             </Button>
           ) : (
@@ -239,7 +249,7 @@ function Form() {
           )}
         </span>
       </Paper>
-    </FormControl>
+    </form>
   );
 }
 
