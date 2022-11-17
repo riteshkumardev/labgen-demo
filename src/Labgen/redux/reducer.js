@@ -6,6 +6,7 @@ import {
   DELETEITEM,
   EDITITEM,
   FILTERDATA,
+  GOTOFORM,
   UPDATE,
 } from "./type";
 
@@ -15,6 +16,7 @@ const int = {
   filterData: [],
   edit: {},
   data: [],
+  apidata: [],
   formStatus:false,
 
 };
@@ -25,9 +27,9 @@ export const reducer = (state = int, action) => {
       console.log(payload, "payload");
       return {
         ...state,
-        data: [...state.data, payload.item],
-        isEdit:false,
-        formStatus: payload.formStatus
+        apidata: [...state.apidata, payload],
+        
+        formStatus: false
       };
     case EDITITEM:
       return {
@@ -37,13 +39,14 @@ export const reducer = (state = int, action) => {
       };
     case CANCEL:
       return {
+        ...state,
         isEdit: false,
-        changepath: false,
+        formStatus: false,
       };
-    case CHANGEPATH:
+    case GOTOFORM:
       return {
         ...state,
-        changepath: payload.changepath,
+        formStatus: true,
       };
     case UPDATE:
       return {
@@ -56,27 +59,27 @@ export const reducer = (state = int, action) => {
     case APICALL:
       return {
         ...state,
-        data: payload.apidata,
-        filterData:payload.apidata
-          
+        apidata: payload.apidata,
+      
         
        
       };
     case DELETEITEM:
-      const deletdata = state.data.filter((el) => el.capsule_serial !== payload);
+      const deletdata = state.apidata.filter((el) => el.capsule_serial !== payload);
 
       console.log(deletdata);
       return {
         ...state,
-        data: deletdata,
+        apidata: deletdata,
       };
     case FILTERDATA:
     
-
+console.log(payload,"payload")
       
       return {
+        
         ...state,
-        filterdata: payload,
+        data: payload,
       };
 
     default:

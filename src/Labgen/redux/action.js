@@ -6,6 +6,7 @@ import {
   DELETEITEM,
   EDITITEM,
   FILTERDATA,
+  GOTOFORM,
   UPDATE,
 } from "./type";
 
@@ -28,13 +29,8 @@ export const editItem = (payload) => {
     payload,
   };
 };
-export const changePath = (payload) => {
-  return {
-    type: CHANGEPATH,
-    payload,
-  };
-};
-export const cancel = (payload) => {
+
+export const gotoBack = (payload) => {
   return {
     type: CANCEL,
     payload,
@@ -57,6 +53,13 @@ export const filterData = (payload) => {
 
   return {
     type: FILTERDATA,
+    payload,
+  };
+};
+export const gotoForm = (payload) => {
+
+  return {
+    type: GOTOFORM,
     payload,
   };
 };
